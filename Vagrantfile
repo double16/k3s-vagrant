@@ -7,9 +7,14 @@ Vagrant.configure("2") do |config|
     config.vbguest.no_install = true
   end
 
+#  config.vm.provider "virtualbox" do |vb|
+#    vb.cpus = 4
+#    vb.memory = "8192"
+#  end
+
   config.vm.network "forwarded_port", guest: 6443, host: 7443
 
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
     curl -sfL https://get.k3s.io | sudo sh -
     sleep 10s
     k3s kubectl get node
@@ -30,6 +35,7 @@ EOF
     sudo tar -C /usr/bin -xzf /tmp/helm.tar.gz --strip-components=1 linux-amd64/helm linux-amd64/tiller
     rm /tmp/helm.tar.gz
     helm init
+    helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
     kubectl create serviceaccount --namespace kube-system tiller
     kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
     kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
