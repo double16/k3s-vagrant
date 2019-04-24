@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
     kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
     kubectl patch storageclass local-path -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
-    curl -sfL -o /tmp/helm.tar.gz https://storage.googleapis.com/kubernetes-helm/helm-v2.13.0-linux-amd64.tar.gz
+    curl -sfL -o /tmp/helm.tar.gz https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
     sudo tar -C /usr/bin -xzf /tmp/helm.tar.gz --strip-components=1 linux-amd64/helm linux-amd64/tiller
     rm /tmp/helm.tar.gz
     helm init
